@@ -1,0 +1,419 @@
+/* ======================================================= */
+/* 1. KHAI BÁO BIẾN MÀU SẮC (THEME SAKURA) */
+/* ======================================================= */
+:root {
+    --sakura-bg: #FFF0F5;          /* Nền tổng thể hồng phấn nhạt */
+    --sakura-white: #ffffff;       /* Màu trắng chuẩn */
+    --sakura-input-bg: #FFF5F7;    /* Nền ô nhập liệu */
+    --sakura-me: #F4A7B6;          /* Màu bong bóng chat của mình */
+    --sakura-border: #F8C3CD;      /* Viền nhẹ */
+    --sakura-accent: #D95D7D;      /* Màu nhấn (icon, text đậm) */
+    --sakura-text: #4a4a4a;        /* Màu chữ chính */
+    --sakura-shadow: rgba(217, 93, 125, 0.25); /* Màu bóng đổ */
+}
+
+/* ======================================================= */
+/* 2. BACKGROUND & HIỆU ỨNG CÁNH HOA RƠI */
+/* ======================================================= */
+
+/* Đổi nền các khu vực chính */
+#app, .bg__dark-mode, body, 
+.message-view, .message-view__scroll, .message-view__scroll__inner {
+    background-color: var(--sakura-bg) !important;
+}
+
+/* Keyframes cánh hoa rơi */
+@keyframes fall {
+    to { transform: translateY(100vh) rotateZ(360deg); opacity: 0; }
+}
+@keyframes sway {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(20px); }
+    100% { transform: translateX(0); }
+}
+
+/* Tạo cánh hoa bằng pseudo-element */
+.message-view__scroll::before {
+    content: '';
+    position: absolute;
+    top: -50px; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    box-shadow: 
+        10vw 0vh 0 0 var(--sakura-border),
+        25vw 20vh 0 0 var(--sakura-me),
+        40vw 10vh 0 0 var(--sakura-border),
+        60vw 30vh 0 0 var(--sakura-me),
+        80vw 5vh 0 0 var(--sakura-border),
+        90vw 25vh 0 0 var(--sakura-me);
+    background: transparent;
+    border-radius: 50%;
+    width: 6px; height: 6px;
+    opacity: 0.8;
+    animation: fall 25s linear infinite, sway 4s ease-in-out infinite alternate;
+}
+
+/* ======================================================= */
+/* 3. BONG BÓNG CHAT (MESSAGE BUBBLES) */
+/* ======================================================= */
+
+/* --- A. TIN NHẮN CỦA MÌNH (Me) --- */
+
+/* Khung tin nhắn chính */
+.message-wrapper--me .message-frame {
+    background-color: var(--sakura-me) !important;
+    color: var(--sakura-white) !important;
+    border: none !important;
+    border-radius: 18px 18px 4px 18px !important;
+    box-shadow: 0 2px 5px var(--sakura-shadow);
+}
+
+/* Màu chữ & Tên mention */
+.message-wrapper--me .message-text-content,
+.message-wrapper--me span {
+    color: var(--sakura-white) !important;
+}
+.message-wrapper--me .mention-name {
+    color: #fff0f5 !important;
+    font-weight: bold !important;
+    text-decoration: underline !important;
+    background-color: rgba(255,255,255,0.2) !important;
+    padding: 0 4px;
+    border-radius: 4px;
+}
+
+/* FIX: Thời gian gửi (Trong bong bóng mình) - Ẩn nền, chữ trắng */
+.message-wrapper--me .card-send-time {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+.message-wrapper--me .card-send-time__sendTime {
+    color: var(--sakura-white) !important; 
+    opacity: 1 !important;
+}
+
+/* FIX: Reply/Trích dẫn (Trong bong bóng mình) */
+.message-wrapper--me .message-quote-fragment__container {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    border-left: 3px solid #ffffff !important;
+    border-radius: 0 6px 6px 0 !important;
+}
+/* Fix thanh dọc màu xanh thành màu trắng */
+.message-wrapper--me .message-quote-fragment__container--blue {
+    border-left: 3px solid var(--sakura-white) !important; 
+}
+.message-wrapper--me .quote-name,
+.message-wrapper--me .message-quote-fragment__description {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+/* FIX: Tin nhắn hình ảnh (Trong bong bóng mình) - Đổi nền xanh thành hồng */
+.message-wrapper--me .img-center-box,
+.message-wrapper--me .bg-color,
+.message-wrapper--me .img-msg-v2__bub {
+    background-color: var(--sakura-me) !important;
+    border-color: var(--sakura-me) !important;
+}
+.message-wrapper--me .msg-select-overlay {
+    border-color: transparent !important;
+}
+
+/* --- B. TIN NHẮN CỦA NGƯỜI KHÁC (Others) --- */
+
+.chat-message:not(.me) .message-frame {
+    background-color: var(--sakura-white) !important;
+    border: 1px solid var(--sakura-border) !important;
+    color: var(--sakura-text) !important;
+    border-radius: 18px 18px 18px 4px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Reply/Trích dẫn (Của người khác) */
+.message-wrapper:not(.message-wrapper--me) .message-quote-fragment__container {
+    background-color: var(--sakura-input-bg) !important;
+    border-left: 3px solid var(--sakura-accent) !important;
+}
+
+/* Tên người gửi & Thời gian (Chung cho người khác) */
+.message-sender-name-content {
+    color: var(--sakura-accent) !important;
+    font-weight: bold;
+    font-size: 12px;
+}
+.card-send-time__sendTime {
+    color: var(--sakura-accent) !important;
+    opacity: 0.7;
+}
+
+/* ======================================================= */
+/* 4. THANH NHẬP LIỆU (CHAT INPUT) */
+/* ======================================================= */
+
+#chatInput, .chat-box-input-container { 
+    background-color: var(--sakura-white) !important; 
+    border-top: 1px solid var(--sakura-border) !important; 
+}
+.chat-box-toolbar, #chat-box-bar-id { 
+    background-color: transparent !important; 
+    border: none !important; 
+}
+
+/* Style cho các nút ICON */
+.chat-box-toolbar-button, .chat-box-input-button, .rtf-tool-button {
+    border-radius: 50% !important; 
+    width: 32px !important; height: 32px !important; 
+    color: var(--sakura-accent) !important; 
+    background: transparent !important; 
+    border: 1px solid transparent !important; 
+    transition: all 0.2s ease; 
+    display: flex !important; justify-content: center !important; align-items: center !important;
+}
+.chat-box-toolbar-button:hover, .chat-box-input-button:hover, .rtf-tool-button:hover {
+    background-color: var(--sakura-bg) !important; 
+    border-color: var(--sakura-me) !important; 
+    transform: translateY(-2px); 
+    color: var(--sakura-accent) !important;
+}
+
+/* Ô NHẬP VĂN BẢN (PILL SHAPE) */
+.chat-input-container, .chat-box-input { 
+    background: transparent !important; 
+    border: none !important; 
+    box-shadow: none !important; 
+}
+.chat-input-wrapper {
+    background-color: var(--sakura-input-bg) !important; 
+    border: 1px solid var(--sakura-border) !important; 
+    border-radius: 24px !important; 
+    padding: 8px 16px !important; 
+    margin: 4px 0 !important; 
+    transition: all 0.3s ease;
+}
+.chat-box-input--to-focus .chat-input-wrapper, .chat-input-wrapper:focus-within {
+    background-color: var(--sakura-white) !important; 
+    border-color: var(--sakura-accent) !important; 
+    box-shadow: 0 0 0 3px var(--sakura-shadow) !important;
+}
+.rich-input { color: var(--sakura-text) !important; }
+.chat-input-container__right-layout { padding-right: 10px !important; }
+#zic_svg-like-emoji-icon { filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(304deg) brightness(95%) contrast(90%); }
+
+/* ======================================================= */
+/* 5. SIDEBAR (DANH SÁCH TIN NHẮN) & CÁC THÀNH PHẦN KHÁC */
+/* ======================================================= */
+
+/* Sidebar Background */
+#sidebarNav, #main-tab, .nav__tabs { 
+    background-color: var(--sakura-bg) !important; 
+    border-right: 1px solid var(--sakura-border) !important; 
+}
+/* Sidebar Icons */
+.leftbar-tab .fa, .leftbar-tab i, .nav__tabs .internal-icon { 
+    color: var(--sakura-accent) !important; 
+    transition: all 0.2s; 
+}
+.leftbar-tab.selected, .leftbar-tab.active { 
+    background-color: var(--sakura-accent) !important; 
+    border-radius: 12px !important; 
+    margin: 4px 8px !important; 
+    width: auto !important; 
+}
+.leftbar-tab.selected .fa, .leftbar-tab.selected i, .leftbar-tab.selected .internal-icon { 
+    color: white !important; 
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1)); 
+}
+.leftbar-tab:hover:not(.selected) { 
+    background-color: rgba(217, 93, 125, 0.1) !important; 
+    border-radius: 12px !important; 
+}
+
+/* Conversation List Item */
+.conv-item { 
+    background: transparent !important; 
+    border-radius: 8px; 
+    margin: 2px 8px; 
+    width: auto !important; 
+}
+.conv-item:hover { background-color: rgba(255,255,255, 0.5) !important; }
+.conv-item.selected, .conv-item.clicked { 
+    border-left: 4px solid var(--sakura-accent) !important; 
+    background: linear-gradient(90deg, #FFF0F5 0%, #FFFFFF 100%) !important; 
+    transform: translateX(5px); 
+    transition: all 0.3s ease; 
+}
+.conv-item.selected .zavatar-container { 
+    border: 2px solid var(--sakura-accent); 
+    border-radius: 50%; 
+    padding: 1px; 
+}
+
+/* Search Input */
+#contact-search-input, .global-search-input { 
+    background-color: white !important; 
+    border: 1px solid var(--sakura-border) !important; 
+    border-radius: 20px !important; 
+    color: var(--sakura-text) !important; 
+    padding-left: 30px !important; 
+}
+.group-search__icon, .fa-search { color: var(--sakura-accent) !important; left: 8px !important; }
+
+/* Scrollbar Customization */
+::-webkit-scrollbar-thumb { 
+    background-color: var(--sakura-me) !important; 
+    border-radius: 10px !important; 
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--sakura-accent) !important; }
+
+/* Header Glassmorphism */
+#header, .titlebar { 
+    background-color: rgba(255, 255, 255, 0.65) !important; 
+    backdrop-filter: blur(12px) !important; 
+    border-bottom: 1px solid rgba(248, 195, 205, 0.4) !important; 
+    z-index: 100; 
+}
+.header-title { color: var(--sakura-accent) !important; font-weight: bold; }
+
+/* Message Hover Pop */
+.message-frame:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 8px rgba(217, 93, 125, 0.2) !important; 
+}
+/* Text Selection */
+::selection { background-color: var(--sakura-me) !important; color: white !important; }
+
+/* Tab Indicator & Text */
+.tab-indicator { 
+    background-color: var(--sakura-accent) !important; 
+    height: 3px !important; 
+    border-radius: 4px !important; 
+    box-shadow: 0 2px 5px rgba(217, 93, 125, 0.5); 
+    bottom: 0 !important; 
+}
+.tab-item.selected .z-noti-badge-container div { 
+    color: var(--sakura-accent) !important; 
+    font-weight: 800 !important; 
+}
+
+/* Thanh Ngày Tháng (Date Separator) - Đã gộp và sửa lỗi cú pháp */
+.chat-date { 
+    background-color: rgba(255, 255, 255, 0.6) !important; 
+    color: var(--sakura-accent) !important; 
+    border: 1px solid rgba(244, 167, 182, 0.6) !important; 
+    border-radius: 12px !important; 
+    backdrop-filter: blur(4px); 
+    box-shadow: none !important; 
+}
+.chat-date span { 
+    background-color: rgba(255, 255, 255, 0.6) !important; 
+    color: var(--sakura-accent) !important; 
+    solid rgba(244, 167, 182, 0.6) !important; 
+    border-radius: 12px !important; 
+    backdrop-filter: blur(4px); 
+    box-shadow: none !important; 
+}
+.chat-date .start, .chat-date .end { display: none !important; }
+/* ======================================================= */
+/* 6. ANIMATION & HIỆU ỨNG VISUAL (THEME SAKURA PRO) */
+/* ======================================================= */
+
+/* --- A. FIX & NÂNG CẤP SIDEBAR (Cái icon trong hình bạn gửi) --- */
+
+/* 1. Hiệu ứng chuyển động mượt cho tất cả các tab */
+.leftbar-tab {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* Hiệu ứng đàn hồi (bouncy) */
+    border-radius: 12px !important;
+    margin: 4px 8px !important;
+    width: auto !important;
+}
+
+/* 2. Trạng thái ĐANG CHỌN (Selected) - Fix cái màu đỏ xấu xí */
+.leftbar-tab.selected {
+    /* Màu nền Gradient hồng sang trọng */
+    background: linear-gradient(135deg, #ff9eb5 0%, var(--sakura-accent) 100%) !important;
+    
+    /* Đổ bóng phát sáng (Glow effect) */
+    box-shadow: 0 4px 15px rgba(217, 93, 125, 0.6) !important;
+    
+    /* Phóng to nhẹ để nổi bật */
+    transform: scale(1.05) translateY(-2px);
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 3. Màu icon bên trong khi được chọn */
+.leftbar-tab.selected .fa, 
+.leftbar-tab.selected i, 
+.leftbar-tab.selected .internal-icon {
+    color: #ffffff !important;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* 4. Trạng thái HOVER (Di chuột vào) */
+.leftbar-tab:hover:not(.selected) {
+    background-color: rgba(255, 240, 245, 0.8) !important;
+    transform: translateY(-3px) scale(1.02); /* Bay lên nhẹ */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* --- B. ANIMATION CHUYỂN CẢNH & LOAD TRANG --- */
+
+/* Định nghĩa chuyển động trượt lên và hiện dần */
+@keyframes slideInFade {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Áp dụng cho khung chat chính (Khi mở app hoặc reload) */
+#chatViewContainer, .main__center {
+    animation: slideInFade 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* Áp dụng cho danh sách tin nhắn (Sidebar list) */
+#conversationListId, .conv-list-semi-compact {
+    animation: slideInFade 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation-delay: 0.1s; /* Chạy sau khung chat 1 xíu cho nghệ */
+}
+
+/* --- C. HIỆU ỨNG TƯƠNG TÁC (HOVER) CHO TIN NHẮN & NÚT --- */
+
+/* 1. Tin nhắn bay lên khi di chuột vào */
+.chat-message .message-frame {
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.chat-message .message-frame:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(217, 93, 125, 0.15) !important;
+    z-index: 10;
+}
+
+/* 2. Avatar xoay nhẹ khi hover */
+.zavatar-container:hover {
+    transform: rotate(-5deg) scale(1.1);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 20;
+}
+
+/* 3. Các nút bấm (Gửi ảnh, Sticker...) */
+.chat-box-toolbar-button:hover, 
+.chat-box-input-button:hover {
+    transform: translateY(-3px) rotate(10deg) !important;
+    background-color: var(--sakura-bg) !important;
+    color: var(--sakura-accent) !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 4. Hiệu ứng sóng nước (Ripple) cho nút Gửi (nếu có nút gửi riêng) */
+.btn-primary:active, .leftbar-tab:active {
+    transform: scale(0.95) !important;
+}
+
+/* --- D. THANH CUỘN (SCROLLBAR) MƯỢT HƠN --- */
+* {
+    scroll-behavior: smooth;
+}
